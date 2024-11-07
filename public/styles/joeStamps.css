@@ -1,0 +1,96 @@
+body {
+    margin: 0px;
+    font-family: Calibri, sans-serif;
+}
+
+ul {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    background-color: #f7c1d9;
+    font-size: 2em;
+}
+
+li {
+    float: left;
+}
+
+li a {
+    display: block;
+    color: rgb(41, 41, 41);
+    text-align: center;
+    padding: 14px 16px;
+    text-decoration: none;
+}
+
+li img {
+    display: block;
+    width: 65px;
+}
+
+.center {
+    padding: 50px 20px;
+    text-align: center;
+}
+
+.stamp-list {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 20px;
+    margin-top: 20px;
+}
+
+.stamp-item {
+    position: relative;
+    border: 1px solid #ddd;
+    border-radius: 15px;
+    padding: 15px;
+    width: 150px;
+    background-color: #fff;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s, box-shadow 0.3s;
+    text-align: center;
+}
+
+.stamp-item:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
+}
+
+.stamp-item img {
+    width: 100px;
+    height: auto;
+    object-fit: cover;
+    border-radius: 10px;
+}
+
+.stamp-item h3 {
+    margin-top: 10px;
+    font-size: 16px;
+    font-weight: bold;
+    color: #303030;
+}
+
+.back-to-passport-button {
+    border: 2px solid black;
+    border-radius: 10px;
+    padding: 10px;
+    background-color: #f7c1d9;
+    font-weight: bold;
+    margin-top: 20px;
+    cursor: pointer;
+    transition: background-color 0.3s, transform 0.3s, box-shadow 0.3s;
+}
+
+.back-to-passport-button:hover {
+    background-color: #f09bc1;
+    transform: translateY(-3px);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+}
+
+.back-to-passport-button:active {
+    transform: translateY(0);
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
