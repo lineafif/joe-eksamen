@@ -68,6 +68,14 @@ app.get("/locations", (req, res) => {
   res.sendFile(path.join(__dirname, "public", "locations.html"));
 });
 
+app.get("/joePassport", (req, res) => {
+  res.sendFile(path.join(__dirname, "public", "joePassport.html"));
+});
+
+app.get("/joeStamps", (req, res) => {
+  res.sendFile(path.join(__dirname, "public", "joeStamps.html"));
+});
+
 app.get("/res", (req, res) => {
   res.send("Response message from server");
 });
