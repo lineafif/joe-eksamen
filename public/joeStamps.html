@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="./static/styles/joePassport.css"> <!-- Brug samme CSS som joePassport -->
+    <link rel="stylesheet" href="./static/styles/joeStamps.css"> <!-- For specifik styling af stemplerne -->
+    <title>Joe's Stamps</title>
+</head>
+<body>
+    <ul>
+        <li><img src="./static/img/joeLogo.svg" alt="Logo"></li> 
+        <li><a href="/">Home</a></li>
+        <li style="float:right"><a href="/culture">Culture</a></li>
+        <li style="float:right"><a href="/locations">Locations</a></li>
+        <li style="float:right"><a href="/">Menu</a></li>
+        <li style="float:right"><a href="/joePassport">Joe's Passport</a></li>
+    </ul>
+
+    <div class="center">
+        <h1>Joe's Stamps</h1>
+        <div class="stamp-list">
+            <!-- Dynamisk indhold vil blive tilføjet her med JavaScript -->
+        </div>
+        <!-- Ny knap til at gå tilbage til Joe's Passport -->
+        <button onclick="window.location.href='/joePassport'" class="back-to-passport-button">Back to Joe Passport</button>
+        
+    </div>
+
+    <script src="./static/scripts/joeStamps.js"></script>
+</body>
+</html>

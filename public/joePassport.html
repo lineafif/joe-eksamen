@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="./static/styles/joePassport.css"> 
+    <title>Joe's Passport</title>
+</head>
+
+<body>
+  <ul>
+    <li><img src="./static/img/joeLogo.svg" alt="Logo"></li> 
+    <li><a href="/">Home</a></li>
+    <li style="float:right"><a href="/culture">Culture</a></li> <!-- Der skal tilføjes html hertil, når den er oprettet, samme gælde de andre -->
+    <li style="float:right"><a href="/locations">Locations</a></li>
+    <li style="float:right"><a href="/">Menu</a></li>
+    <li style="float:right" class="active"><a href="/joePassport">Joe's Passport</a></li>
+
+  </ul>
+  <div class="center">
+    <img src="./static/img/passportLogo.png" alt="Passport Logo" class="passport-logo"> <!-- Tilføjet billede af passet -->
+    <button onclick="window.location.href='/joeStamps'">See stamps</button>
+    <p id="response"></p>
+  </div>
+</body>
+
+</html>
