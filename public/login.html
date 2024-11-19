@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Login & Signup</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+      background-color: #f4f4f4;
+    }
+    #auth-container {
+      background: #fff;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+      width: 300px;
+      text-align: center;
+    }
+    h1 {
+      margin-bottom: 20px;
+    }
+    input {
+      width: 100%;
+      padding: 10px;
+      margin: 10px 0;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+    }
+    button {
+      width: 100%;
+      padding: 10px;
+      background-color: #28a745;
+      color: #fff;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+    button:hover {
+      background-color: #218838;
+    }
+    #toggle-auth {
+      color: #007bff;
+      cursor: pointer;
+    }
+    #toggle-auth:hover {
+      text-decoration: underline;
+    }
+    #message {
+      margin-top: 10px;
+      font-size: 0.9em;
+    }
+  </style>
+</head>
+<body>
+  <div id="auth-container">
+    <h1 id="form-title">Login</h1>
+    <form id="auth-form">
+      <input type="email" id="email" placeholder="Email" required>
+      <input type="password" id="password" placeholder="Password" required>
+      <button type="submit" id="submit-button">Login</button>
+    </form>
+    <p id="message"></p>
+    <p>
+      Don't have an account? <span id="toggle-auth">Sign up</span>
+    </p>
+  </div>
+
+  <!-- Firebase SDKs -->
+  <script src="https://www.gstatic.com/firebasejs/10.3.1/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.3.1/firebase-auth.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.3.1/firebase-database.js"></script>
+  <script>
+    // Firebase Config
+    const firebaseConfig = {
+      apiKey: "AIzaSyCFEjAZM5PTdr63DGtpscAy7QR4fLIgPcA",
+      authDomain: "diseksamen-e0f52.firebaseapp.com",
+      databaseURL: "https://diseksamen-e0f52-default-rtdb.europe-west1.firebasedatabase.app/",
+      projectId: "diseksamen-e0f52",
+      storageBucket: "diseksamen-e0f52.firebasestorage.app",
+      messagingSenderId: "191371826193",
+      appId: "1:191371826193:web:a97704e1af7a77d1a14db0"
+    };
+    firebase.initializeApp(firebaseConfig);
+    const auth = firebase.auth();
+    const database = firebase.database();
+
+    // DOM Elements
+    const formTitle = document.getElementById("form-title");
+    const authForm = document.getElementById("auth-form");
+    const toggleAuth = document.getElementById("toggle-auth");
+    const message = document.getElementById("message");
+    const submitButton = document.getElementById("submit-button");
+
+    let isLogin = true;
+
+    // Toggle Login/Signup
+    toggleAuth.addEventListener("click", () => {
+      isLogin = !isLogin;
+      formTitle.textContent = isLogin ? "Login" : "Sign Up";
+      submitButton.textContent = isLogin ? "Login" : "Sign Up";
+      toggleAuth.textContent = isLogin ? "Sign up" : "Login";
+    });
+
+    // Form Submission
+    authForm.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const email = document.getElementById("email").value;
+      const password = document.getElementById("password").value;
+
+      try {
+        if (isLogin) {
+          // Login
+          const userCredential = await auth.signInWithEmailAndPassword(email, password);
+          message.style.color = "green";
+          message.textContent = `Welcome, ${userCredential.user.email}!`;
+          console.log("Logged in user:", userCredential.user);
+          // Redirect or load another page
+          window.location.href = "/protected";
+        } else {
+          // Signup
+          const userCredential = await auth.createUserWithEmailAndPassword(email, password);
+          message.style.color = "green";
+          message.textContent = `Account created for ${userCredential.user.email}`;
+          console.log("New user:", userCredential.user);
+
+          // Save user data to Firebase Realtime Database
+          const userId = userCredential.user.uid;
+          database.ref('users/' + userId).set({
+            email: userCredential.user.email,
+            createdAt: new Date().toISOString()
+          });
+        }
+      } catch (error) {
+        message.style.color = "red";
+        message.textContent = error.message;
+      }
+    });
+  </script>
+</body>
+</html>
