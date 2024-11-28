@@ -137,22 +137,32 @@ async function displayProducts() {
 }
 
 // Login function
+import { signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.5.0/firebase-auth.js";
+
 async function login() {
+  const username = usernameInputDom.value;
+  const password = passwordInputDom.value;
+
+  if (!username || !password) {
+    console.log("Missing username or password");
+    loginDom.textContent = "Please provide a username and password.";
+    return;
+  }
+
+  console.log("Attempting to log in with:", username);
+
   try {
-    const response = await fetch('/login', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ username: usernameInputDom.value, password: passwordInputDom.value }),
-    });
-    if (!response.ok) throw new Error(`HTTP status code ${response.status}`);
-    const data = await response.json();
-    console.log(data);
-    location.href = "/protected";
+    const userCredential = await signInWithEmailAndPassword(auth, username, password);
+    const user = userCredential.user;
+    console.log("Login successful:", user);
+    loginDom.textContent = `Welcome ${user.email}`;
+    location.href = "/protected"; // Redirect to a protected page after login
   } catch (error) {
-    console.log(error);
-    loginDom.innerHTML = `<p>Error: ${error.message}</p>`;
+    console.error("Login failed:", error.message);
+    loginDom.textContent = `Error: ${error.message}`;
   }
 }
+
 
 // Create user with Firebase
 function createUser() {

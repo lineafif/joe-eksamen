@@ -109,42 +109,7 @@ app.post("/email", async (req, res) => {
   }
 });
 
-const customers = [
-  {
-    username: "hans",
-    email: "hanshansen@gmail.com",
-    password: "hansemanse",
-  },
-  {
-    username: "jens",
-    email: "jensjensen@gmail.com",
-    password: "jenspassword",
-  },
-];
 
-app.get("/customers", (req, res) => {
-  res.json(customers);
-});
-
-app.post("/login", (req, res) => {
-  const { username, password } = req.body;
-  console.log(req.body);
-
-  const customer = customers.find(
-    (user) => user.username === username && user.password === password
-  );
-
-  if (customer) {
-    res
-      .cookie("userAuth", username, {
-        maxAge: 3600000,
-      })
-      .send({ message: "You are logged in" })
-      .status(200);
-  } else {
-    res.status(401).send({ message: "Invalid username or password" });
-  }
-});
 
 app.get("/protected", (req, res) => {
   const authCookie = req.cookies.userAuth;
