@@ -160,31 +160,21 @@ function createUser() {
   const password = passwordInputDom.value;
 
   if (!username || !password) {
+    console.log("Missing username or password");
     document.getElementById('create-user-msg').textContent = "Please provide a username and password.";
     return;
   }
 
+  console.log("Attempting to create user with:", username);
+  
   createUserWithEmailAndPassword(auth, username, password)
     .then((userCredential) => {
       const user = userCredential.user;
+      console.log("User created successfully:", user);
       document.getElementById('create-user-msg').textContent = "User created successfully!";
-      console.log("User created:", user);
     })
     .catch((error) => {
-      const errorMessage = error.message;
-      document.getElementById('create-user-msg').textContent = `Error: ${errorMessage}`;
-      console.error("Error creating user:", error.message);
+      console.error("Error creating user:", error.code, error.message);
+      document.getElementById('create-user-msg').textContent = `Error: ${error.message}`;
     });
 }
-
-// Display response time
-document.addEventListener('DOMContentLoaded', () => {
-  const responseTimeParagraph = document.getElementById('responseTimeValue');
-  fetch('/', { method: 'GET', headers: { 'Cache-Control': 'no-cache' } })
-    .then((response) => {
-      const responseTimeHeader = response.headers.get('X-Response-Time');
-      responseTimeParagraph.textContent = `X-Response-Time: ${responseTimeHeader}`;
-    })
-    .catch((error) => console.error('Error:', error));
-});
-
