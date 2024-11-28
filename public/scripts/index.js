@@ -1,3 +1,8 @@
+// Import Firebase modules
+import { auth } from './firebase.js';
+import { createUserWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.5.0/firebase-auth.js";
+
+// DOM elements
 const responseDom = document.getElementById("response");
 const cookieDom = document.getElementById("cookie");
 const locationDom = document.getElementById("location");
@@ -9,57 +14,35 @@ const usernameInputDom = document.getElementById('usernameInput');
 const passwordInputDom = document.getElementById('passwordInput');
 const loginDom = document.getElementById('login');
 
-// async funktion med await
+// Fetch and display response from the /res endpoint
 async function getResponse() {
-  // try catch blok
   try {
-    // fetch data fra /res endpoint og await responsen
     const response = await fetch('/res');
-    
-    // hvis responsen ikke er ok, kast en fejl
-    if (!response.ok) {
-      throw new Error(`HTTP error! Status: ${response.status}`);
-    }
-    
-    // konverter responsen til tekst
-    const data = await response.text(); 
-    
-    // håndter succes
+    if (!response.ok) throw new Error(`HTTP error! Status: ${response.status}`);
+    const data = await response.text();
     console.log(data);
     responseDom.innerHTML = data;
   } catch (error) {
-    // håndter fejl
     console.log(error);
     responseDom.innerHTML = `<p>Error: ${error.message}</p>`;
   }
 }
 
-// async funktion med await
+// Fetch and set cookie
 async function setCookie() {
-    // try catch blok
-    try {
-      // fetch data fra /res endpoint og await responsen
-      const response = await fetch('/cookie');
-
-      // hvis responsen ikke er ok, kast en fejl
-      if (!response.ok) {
-        throw new Error(`HTTP error! Status: ${response.status}`);
-      }
-
-      // konverter responsen til tekst
-      const value = await response.text();
-
-      // håndter succes
-      console.log(value);
-      cookieDom.innerHTML = value;
-    } catch (error) {
-      // håndter fejl
-      console.log(error);
-      cookieDom.innerHTML = `<p>Error: ${error.message}</p>`;
-    }
+  try {
+    const response = await fetch('/cookie');
+    if (!response.ok) throw new Error(`HTTP error! Status: ${response.status}`);
+    const value = await response.text();
+    console.log(value);
+    cookieDom.innerHTML = value;
+  } catch (error) {
+    console.log(error);
+    cookieDom.innerHTML = `<p>Error: ${error.message}</p>`;
+  }
 }
 
-// funktion til at hente placering
+// Set location and fetch latitude/longitude
 async function getLocation() {
   const dropdown = document.getElementById('locationDropdown');
   const selectedLocation = dropdown.options[dropdown.selectedIndex].text;
@@ -68,106 +51,63 @@ async function getLocation() {
   await getLatLong(selectedLocation);
 }
 
-// async funktion med await
 async function getLatLong(locationName) {
   const url = `https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(locationName)}&format=json&addressdetails=1`;
-  // try catch blok
   try {
-    // fetch data fra /res endpoint og await responsen
     const response = await fetch(url);
-
-    // hvis responsen ikke er ok, kast en fejl
-    if (!response.ok) {
-      throw new Error(`HTTP error! Status: ${response.status}`);
-    }
-
-    // konverter responsen til json
+    if (!response.ok) throw new Error(`HTTP error! Status: ${response.status}`);
     const data = await response.json();
-
-    // håndter succes
     if (data.length > 0) {
       console.log(data);
       latlongDom.innerHTML = `Latitude: ${data[0].lat}, Longitude: ${data[0].lon}`;
       await getWeather(data[0].lat, data[0].lon);
     } else {
       throw new Error('No results found');
-    } 
+    }
   } catch (error) {
-    // håndter fejl
     console.log(error);
     latlongDom.innerHTML = `<p>Error: ${error.message}</p>`;
   }
 }
 
-// async funktion med await
 async function getWeather(lat, long) {
   const url = `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${long}&current_weather=true`;
-  // try catch blok
   try {
-    // fetch data fra /res endpoint og await responsen
     const response = await fetch(url);
-
-    // hvis responsen ikke er ok, kast en fejl
-    if (!response.ok) {
-      throw new Error(`HTTP error! Status: ${response.status}`);
-    }
-
-    // konverter responsen til json
+    if (!response.ok) throw new Error(`HTTP error! Status: ${response.status}`);
     const data = await response.json();
-
-    // håndter succes
     console.log(data);
     weatherDom.innerHTML = `Temperature: ${data.current_weather.temperature}°`;
   } catch (error) {
-    // håndter fejl
     console.log(error);
     weatherDom.innerHTML = `<p>Error: ${error.message}</p>`;
   }
 }
 
-// Opgave 2: Lav et fetch POST request til /email endpoint
-// Hint: https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API/Using_Fetch#making_post_requests
-
-// async funktion med await
+// Send email via POST request
 async function sendEmail() {
-  // try catch blok
   try {
-    // fetch POST request for /email endpoint og await responsen
     const response = await fetch('/email', {
       method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
+      headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ email: emailInputDom.value }),
     });
-
-    // hvis responsen ikke er ok, kast en fejl
-    if (!response.ok) {
-      throw new Error(`HTTP statuskode ${response.status}`);
-    }
-
-    // håndter succes
-    if (response.ok) {
-      const data = await response.json();
-      console.log(data);
-      emailDom.innerHTML = data.message;
-    }
-
-} catch (error) {
-    // håndter fejl
+    if (!response.ok) throw new Error(`HTTP status code ${response.status}`);
+    const data = await response.json();
+    console.log(data);
+    emailDom.innerHTML = data.message;
+  } catch (error) {
     console.log(error);
-    emailDom.innerHTML = `<p>Fejl: ${error.message}</p>`;
+    emailDom.innerHTML = `<p>Error: ${error.message}</p>`;
   }
 }
 
+// Fetch and display products
 async function fetchProducts() {
   try {
     const response = await fetch('/products');
-    if (!response.ok) {
-      throw new Error('Failed to fetch products');
-    }
-    productList = await response.json(); 
-    return productList;
+    if (!response.ok) throw new Error('Failed to fetch products');
+    return await response.json();
   } catch (error) {
     console.error("Error:", error);
     return [];
@@ -175,17 +115,16 @@ async function fetchProducts() {
 }
 
 async function displayProducts() {
-  await fetchProducts();  
+  const productList = await fetchProducts();
   const productContainer = document.getElementById("product-list");
+  productContainer.innerHTML = "";
 
-  productContainer.innerHTML = ""; 
-
-  productList.forEach((product, index) => {
+  productList.forEach((product) => {
     const productItem = document.createElement("div");
     productItem.classList.add("product-item");
 
     const img = document.createElement("img");
-    img.src = product.imgsrc;  
+    img.src = product.imgsrc;
     img.alt = product.productName;
 
     const productName = document.createElement("h3");
@@ -197,63 +136,55 @@ async function displayProducts() {
   });
 }
 
-
-// async funktion med await
+// Login function
 async function login() {
-  // try catch blok
   try {
-    // fetch POST request for /email endpoint og await responsen
     const response = await fetch('/login', {
       method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
+      headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ username: usernameInputDom.value, password: passwordInputDom.value }),
     });
-
-    // hvis responsen ikke er ok, kast en fejl
-    if (!response.ok) {
-      throw new Error(`HTTP statuskode ${response.status}`);
-    }
-
-    // håndter succes
-    if (response.ok) {
-      const data = await response.json();
-      console.log(data);
-      location.href = "/protected";
-    }
-
-} catch (error) {
-    // håndter fejl
+    if (!response.ok) throw new Error(`HTTP status code ${response.status}`);
+    const data = await response.json();
+    console.log(data);
+    location.href = "/protected";
+  } catch (error) {
     console.log(error);
-    loginDom.innerHTML = `<p>Fejl: ${error.message}</p>`;
+    loginDom.innerHTML = `<p>Error: ${error.message}</p>`;
   }
 }
 
+// Create user with Firebase
+function createUser() {
+  const username = usernameInputDom.value;
+  const password = passwordInputDom.value;
 
-document.addEventListener('DOMContentLoaded', function () {
-  // Create a new <p> element
-  const paragraph = document.createElement('p');
+  if (!username || !password) {
+    document.getElementById('create-user-msg').textContent = "Please provide a username and password.";
+    return;
+  }
 
-  // Append the <p> element to the body
-  document.body.appendChild(paragraph);
+  createUserWithEmailAndPassword(auth, username, password)
+    .then((userCredential) => {
+      const user = userCredential.user;
+      document.getElementById('create-user-msg').textContent = "User created successfully!";
+      console.log("User created:", user);
+    })
+    .catch((error) => {
+      const errorMessage = error.message;
+      document.getElementById('create-user-msg').textContent = `Error: ${errorMessage}`;
+      console.error("Error creating user:", error.message);
+    });
+}
+
+// Display response time
+document.addEventListener('DOMContentLoaded', () => {
   const responseTimeParagraph = document.getElementById('responseTimeValue');
-
-  // Send a GET request using the fetch API
-  fetch('/', {
-      method: 'GET',
-      headers: {
-          'Cache-Control': 'no-cache',
-      },
-  })
-      .then((response) => {
-          // Get the value of the X-Response-Time header
-          const responseTimeHeader = response.headers.get('X-Response-Time');
-
-          // Display the header value in the paragraph
-          responseTimeParagraph.textContent = `X-Response-Time: ${responseTimeHeader}`;
-      })
-      .catch((error) => {
-          console.error('Error:', error);
-      });
+  fetch('/', { method: 'GET', headers: { 'Cache-Control': 'no-cache' } })
+    .then((response) => {
+      const responseTimeHeader = response.headers.get('X-Response-Time');
+      responseTimeParagraph.textContent = `X-Response-Time: ${responseTimeHeader}`;
+    })
+    .catch((error) => console.error('Error:', error));
 });
+
