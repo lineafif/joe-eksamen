@@ -1,5 +1,8 @@
 <!DOCTYPE html>
 <html lang="en">
+  <script src="https://www.gstatic.com/firebasejs/9.17.2/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.17.2/firebase-auth.js"></script>
+
 
 <head>
   <meta charset="UTF-8">
@@ -44,10 +47,12 @@
     <input type="text" id="usernameInput" placeholder="Indtast brugernavn">
     <input type="password" id="passwordInput" placeholder="Indtast password">
     <button onclick="login()">Login me</button>
-  <p id="login"></p>
-</div>
-
+    <button onclick="createUser()">Create User</button>
+    <p id="login"></p>
+    <p id="create-user-msg"></p>
+  </div>
 </body>
 <script src="./static/scripts/index.js"></script>
 
 </html>
+
