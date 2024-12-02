@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sign Up - JOE and The Juice</title>
+  <link rel="stylesheet" href="/static/styles/global.css">
+</head>
+<body>
+  <ul>
+    <li><img src="/static/img/joeLogo.svg" alt="Logo"></li>
+    <li><a href="/">Home</a></li>
+    <li style="float:right"><a href="/joePassport">Joe's Passport</a></li>
+  </ul>
+
+  <div class="center">
+    <h2>Sign Up</h2>
+    <form id="signupForm">
+      <input type="text" id="firstName" placeholder="Fornavn" required>
+      <input type="text" id="lastName" placeholder="Etternavn" required>
+      <input type="email" id="email" placeholder="Email" required>
+      <input type="tel" id="mobile" placeholder="Mobilnummer" required>
+      <input type="password" id="password" placeholder="Passord" required>
+      <button type="submit">Create Account</button>
+    </form>
+    <p id="signup-msg"></p>
+    <button onclick="location.href='/'">Already a user? Login here!</button>
+  </div>
+
+  <script src="/static/scripts/signup.js" type="module"></script>
+</body>
+</html>
