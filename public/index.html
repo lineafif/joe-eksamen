@@ -5,25 +5,39 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>JOE and The Juice</title>
   <link rel="stylesheet" href="/static/styles/global.css">
-
 </head>
 <body>
   <ul>
     <li><img src="/static/img/joeLogo.svg" alt="Logo"></li>
     <li><a href="/" class="active">Home</a></li>
     <li style="float:right"><a href="/joePassport">Joe's Passport</a></li>
+    <li style="float:right"><a href="/locations">Locations</a></li>
+    <li style="float:right"><a href="/menu">Menu</a></li>
   </ul>
 
   <div class="center">
-    <h2>Login</h2>
-    <input type="text" id="usernameInput" placeholder="Indtast brugernavn">
-    <input type="password" id="passwordInput" placeholder="Indtast password">
-    <button onclick="login()">Login</button>
-    <button onclick="createUser()">Create User</button>
+    <h2>Welcome to Joe & The Juice!</h2>
+    <h3>Been here before? </h3>
+    <input type="text" id="usernameInput" placeholder="Enter your email here">
+    <input type="password" id="passwordInput" placeholder="Enter your password here">
+    <button onclick="login()">Login here</button>
+    <h3>If not... </h3>
+    <button onclick="location.href='/static/signup.html'">Sign Up Here!</button>
     <p id="login"></p>
-    <p id="create-user-msg"></p>
   </div>
-  <script src="/static/scripts/index.js" type="module"></script>
 
+  <div class="center">
+    <h2>Want to be a part of our newsletter?</h2>
+    <input type="email" id="newsletterEmail" placeholder="Enter your email" required>
+    <button onclick="sendEmail()">Subscribe</button>
+    <p id="newsletterMessage"></p>
+  </div>
+
+
+  
+
+
+  <script src="/static/scripts/index.js" type="module"></script>
+  
 </body>
 </html>

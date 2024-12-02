@@ -1,5 +1,5 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.5.0/firebase-app.js";
-import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.5.0/firebase-auth.js";
+import { getAuth, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.5.0/firebase-auth.js";
 
 // Firebase configuration
 const firebaseConfig = {
@@ -29,28 +29,51 @@ window.login = async function login() {
   try {
     const userCredential = await signInWithEmailAndPassword(auth, email, password);
     document.getElementById("login").innerText = `Welcome back, ${userCredential.user.email}`;
+    console.log("User logged in:", userCredential.user);
+
+    // Redirect to Joe Passport page
+    window.location.href = "/joePassport";
   } catch (error) {
     document.getElementById("login").innerText = `Error: ${error.message}`;
     console.error("Login error:", error);
   }
 };
 
-// Handle user creation
-window.createUser = async function createUser() {
-  const email = document.getElementById("usernameInput").value;
-  const password = document.getElementById("passwordInput").value;
 
-  if (!email || !password) {
-    document.getElementById("create-user-msg").innerText = "Please enter both email and password.";
-    return;
-  }
+// Async function to handle sending the email
+const emailInputDom = document.getElementById("newsletterEmail");
+const emailDom = document.getElementById("newsletterMessage");
 
+async function sendEmail() {
   try {
-    const userCredential = await createUserWithEmailAndPassword(auth, email, password);
-    document.getElementById("create-user-msg").innerText = `User created: ${userCredential.user.email}`;
+    const email = emailInputDom.value; // Get email from input field
+    if (!email) {
+      emailDom.innerHTML = "Please enter a valid email.";
+      return;
+    }
+
+    const response = await fetch("/email", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ email }), // Send email as JSON
+    });
+
+    if (!response.ok) {
+      throw new Error(`HTTP status code ${response.status}`);
+    }
+
+    const data = await response.json();
+    console.log(data);
+    emailDom.innerHTML = data.message; // Display success message
+    emailInputDom.value = ""; // Clear input field
   } catch (error) {
-    document.getElementById("create-user-msg").innerText = `Error: ${error.message}`;
-    console.error("User creation error:", error);
+    console.error("Error:", error);
+    emailDom.innerHTML = `Error: ${error.message}`;
   }
-};
+}
+
+// Attach the function to the Subscribe button (in case onclick is missing)
+document.querySelector("button[onclick='sendEmail()']").addEventListener("click", sendEmail);
 
