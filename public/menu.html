@@ -1,15 +1,35 @@
+
+
 <!DOCTYPE html>
 <html lang="en">
+
+
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Redirecting to Locations</title>
-  <script>
-    // Redirect to the Joe & The Juice menu page
-    window.location.href = "https://www.joejuice.com/store/5f871bf1-b0d1-4e2a-ac84-31047281cde9";
-  </script>
+   <meta charset="UTF-8">
+   <meta http-equiv="X-UA-Compatible" content="IE=edge">
+   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+   <link rel="stylesheet" href="./static/styles/global.css">
+   <title>Menu</title>
 </head>
+
+
 <body>
-  <p>If you are not redirected automatically, <a href="https://www.joejuice.com/store/5f871bf1-b0d1-4e2a-ac84-31047281cde9">click here</a>.</p>
+   <ul>
+       <li><img src="./static/img/joeLogo.svg" alt="Logo"></li>
+       <li><a href="/">Home</a></li>
+       <li style="float:right"><a href="/locations">Locations</a></li>
+       <li style="float:right" class="active"><a href="/menu">Menu</a></li>
+   </ul>
+
+
+   <div class="center">
+       <h2>Our Menu</h2>
+       <div id="product-list" class="product-list"></div>
+   </div>
+
+
+   <script src="./static/scripts/menu.js"></script>
 </body>
+
+
 </html>
