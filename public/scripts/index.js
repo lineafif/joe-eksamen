@@ -1,6 +1,6 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.5.0/firebase-app.js";
 import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.5.0/firebase-auth.js";
-
+import { v2 as cloudinary } from 'cloudinary';
 // Firebase configuration
 const firebaseConfig = {
   apiKey: "AIzaSyCFEjAZM5PTdr63DGtpscAy7QR4fLIgPcA",
@@ -53,4 +53,3 @@ window.createUser = async function createUser() {
     console.error("User creation error:", error);
   }
 };
-
