@@ -7,6 +7,8 @@ const app = express();
 app.use(express.json());
 app.use("/static", express.static(path.join(__dirname, "public")));
 
+
+
 // Logging middleware (optional for debugging)
 app.use((req, res, next) => {
   console.log(`Request: ${req.method} ${req.url}`);
@@ -36,8 +38,8 @@ app.get("/joeStamps", (req, res) => {
   res.sendFile(path.join(__dirname, "public", "joeStamps.html"));
 });
 
-app.get("/signup", (req, res) => {
-  res.sendFile(path.join(__dirname, "public", "signup.html"));
+app.get("/signUp", (req, res) => {
+  res.sendFile(path.join(__dirname, "public", "signUp.html"));
 });
 
 app.get("/locations", (req, res) => {
@@ -47,6 +49,8 @@ app.get("/locations", (req, res) => {
 app.get("/menu", (req, res) => {
   res.sendFile(path.join(__dirname, "public", "menu.html"));
 });
+
+
 
 // Newsletter 
 app.post("/email", async (req, res) => {
