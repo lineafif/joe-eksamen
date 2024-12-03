@@ -51,12 +51,9 @@ document.getElementById("signupForm").addEventListener("submit", async (e) => {
 
     document.getElementById("signup-msg").innerHTML = `
       User created successfully! 
-      <button id="goToLogin" style="margin-top: 10px; padding: 5px 10px;">Go to Login</button>
+      
     `;
-
-    document.getElementById("goToLogin").addEventListener("click", () => {
-      window.location.href = "/index";
-    });
+  
   } catch (error) {
     document.getElementById("signup-msg").innerText = `Error: ${error.message}`;
   }
