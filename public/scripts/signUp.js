@@ -1,5 +1,7 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.5.0/firebase-app.js";
 import { getAuth, createUserWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.5.0/firebase-auth.js";
+import { getDatabase, ref, set } from "https://www.gstatic.com/firebasejs/10.5.0/firebase-database.js";
+
 
 // Firebase configuration
 const firebaseConfig = {
@@ -15,24 +17,47 @@ const firebaseConfig = {
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
+const database = getDatabase(app);
 
-// Handle user creation
+
 document.getElementById("signupForm").addEventListener("submit", async (e) => {
   e.preventDefault();
 
+  // Hente verdier fra skjemaet
+  const firstName = document.getElementById("firstName").value;
+  const lastName = document.getElementById("lastName").value;
   const email = document.getElementById("email").value;
+  const countryCode = document.getElementById("countryCode").value; // Hent landkode
+  const mobile = document.getElementById("mobile").value;
+  const fullMobile = `${countryCode}${mobile}`; // Kombiner landkode og mobilnummer
   const password = document.getElementById("password").value;
 
-  if (!email || !password) {
+  if (!firstName || !lastName || !email || !mobile || !password) {
     document.getElementById("signup-msg").innerText = "Please fill out all fields.";
     return;
   }
-
   try {
+    // Opprett bruker i Firebase Auth
     const userCredential = await createUserWithEmailAndPassword(auth, email, password);
-    document.getElementById("signup-msg").innerText = `User created: ${userCredential.user.email}`;
+    const userId = userCredential.user.uid;
+
+    // Lagre ekstra data i Firebase Database
+    await set(ref(database, `users/${userId}`), {
+      firstName,
+      lastName,
+      email,
+      mobile: fullMobile, // Lagre mobilnummer med landkode
+    });
+
+    document.getElementById("signup-msg").innerHTML = `
+      User created successfully! 
+      <button id="goToLogin" style="margin-top: 10px; padding: 5px 10px;">Go to Login</button>
+    `;
+
+    document.getElementById("goToLogin").addEventListener("click", () => {
+      window.location.href = "/index";
+    });
   } catch (error) {
     document.getElementById("signup-msg").innerText = `Error: ${error.message}`;
-    console.error("User creation error:", error);
   }
 });
