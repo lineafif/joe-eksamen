@@ -53,3 +53,5 @@ document.getElementById("signupForm").addEventListener("submit", async (e) => {
     document.getElementById("signup-msg").innerText = `Error: ${error.message}`;
   }
 });
+
+

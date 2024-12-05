@@ -4,6 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="./static/styles/joePassport.css"> 
+    <link rel="stylesheet" href="./static/styles/joePassport.css"> 
+    <script type="module" src="/static/scripts/dashboard.js" defer></script>
     <title>Joe's Passport</title>
 </head>
 
@@ -17,10 +19,36 @@
 
   </ul>
   <div class="center">
+    <script type="module">
+      import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.5.0/firebase-auth.js";
+    
+      const auth = getAuth();
+    
+      onAuthStateChanged(auth, (user) => {
+        if (user) {
+          // Extract first name from displayName or default to 'Guest'
+          const firstName = user.displayName?.split(" ")[0] || "Guest";
+    
+          // Update the name placeholder on the passport
+          document.getElementById("user-name-placeholder").textContent = firstName;
+        } else {
+          // Redirect to login if no user is logged in
+          window.location.href = "/";
+        }
+      });
+    </script>
+    <div class="passport-container">
     <img src="./static/img/passportLogo.png" alt="Passport Logo" class="passport-logo"> <!-- Tilføjet billede af passet -->
+    <div class="user-first-name" id="user-first-name">Your Name Here</div>
+    <div class="user-last-name" id="user-last-name">Your Name Here</div>
+  </div>
     <button onclick="window.location.href='/joeStamps'">See stamps</button>
     <p id="response"></p>
   </div>
+  <button id="logout-button">Log ud</button>
+  <script type="module" src="./static/scripts/logout.js" defer></script>
+
+
 </body>
 
 </html>
