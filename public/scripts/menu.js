@@ -35,30 +35,38 @@ async function displayProducts() {
     productList.forEach(product => {
         const productItem = document.createElement("div");
         productItem.classList.add("product-item");
-
+    
         const img = document.createElement("img");
         img.src = product.imgsrc;
         img.alt = product.productName || "Product image";
+    
+        // Fallback for image if not available
         img.onerror = () => {
-            img.src = '/static/img/placeholder.png'; // Fallback-bilde
+            img.src = '/static/img/placeholder.png'; // Fallback image
         };
-
+    
         const productName = document.createElement("h3");
-        productName.innerText = product.productName || "Unnamed Product";
-
+        productName.innerText = product.productName || "Unnamed Product"; // Fallback if name is missing
+    
+        // Ensure price is always a valid number
         const productPrice = document.createElement("p");
-        productPrice.innerText = `$${product.price.toFixed(2)}`; // Vis prisen før de legger til i kurven
-
+        const price = product.price !== undefined && product.price !== null ? product.price.toFixed(2) : "5.99"; // Default to $5.99 if price is missing
+        productPrice.innerText = `$${price}`;
+    
         const addToCartButton = document.createElement("button");
         addToCartButton.innerText = "Add to Cart";
         addToCartButton.onclick = () => addToCart(product);
-
+    
+        // Append elements to product item
         productItem.appendChild(img);
         productItem.appendChild(productName);
-        productItem.appendChild(productPrice); // Legg til prisen før knappen
+        productItem.appendChild(productPrice);
         productItem.appendChild(addToCartButton);
+    
+        // Append the product item to the container
         productContainer.appendChild(productItem);
     });
+    
 }
 
 
