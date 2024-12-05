@@ -1,0 +1,148 @@
+/* Layout */
+.container {
+    display: flex;
+    justify-content: space-between; /* Ensures products and cart are on opposite sides */
+    align-items: flex-start; /* Aligns the top edges */
+    gap: 20px; /* Adds space between the two columns */
+    padding: 20px;
+    font-family: 'Calibri', sans-serif; /* Ensures Calibri font is used for the layout */
+}
+
+/* Product List */
+.product-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); /* Responsive grid */
+    gap: 20px;
+    width: 70%; /* Takes up most of the space */
+    font-family: 'Calibri', sans-serif; /* Ensures Calibri font is used for product list */
+}
+
+.product-item {
+    border: 1px solid #ddd;
+    border-radius: 15px;
+    padding: 15px;
+    background-color: #fff;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s, box-shadow 0.3s;
+    font-family: 'Calibri', sans-serif; /* Ensures Calibri font is used for product item */
+}
+
+.product-item:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
+}
+
+.product-item img {
+    width: 100%;
+    height: 150px;
+    object-fit: cover;
+    border-radius: 10px;
+}
+
+.product-item h3 {
+    margin-top: 10px;
+    font-size: 18px;
+    font-weight: bold;
+    color: #303030;
+    font-family: 'Calibri', sans-serif; /* Ensures Calibri font is used for product title */
+}
+
+.product-item button {
+    margin-top: 10px;
+    border: none;
+    background-color: #f7c1d9;
+    color: white;
+    font-weight: bold;
+    padding: 10px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    font-family: 'Calibri', sans-serif; /* Ensures Calibri font is used for button */
+}
+
+.product-item button:hover {
+    background-color: #f09bc1;
+}
+
+/* Cart */
+.cart {
+    width: 25%; /* Cart occupies less space */
+    background-color: #f7c1d9;
+    border: 1px solid #ddd;
+    border-radius: 15px;
+    padding: 15px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    max-height: 80vh; /* Prevents the cart from extending too far */
+    overflow-y: auto; /* Adds a scrollbar if the content exceeds the height */
+    font-family: 'Calibri', sans-serif; /* Ensures Calibri font is used for cart */
+}
+
+.cart h3 {
+    text-align: center;
+    font-size: 18px;
+    margin-bottom: 10px;
+    font-family: 'Calibri', sans-serif; /* Ensures Calibri font is used for cart title */
+}
+
+.cart ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.cart ul li {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+    font-family: 'Calibri', sans-serif; /* Ensures Calibri font is used for cart items */
+}
+
+.cart ul li span {
+    flex-grow: 1;
+    text-align: left;
+}
+
+.cart ul li button {
+    border: none;
+    background-color: #f09bc1;
+    color: white;
+    font-weight: bold;
+    padding: 5px 10px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    font-family: 'Calibri', sans-serif; /* Ensures Calibri font is used for remove button */
+}
+
+.cart ul li button:hover {
+    background-color: #f088b7;
+}
+
+#cart-total {
+    text-align: center;
+    font-weight: bold;
+    margin-top: 10px;
+    font-size: 16px;
+    font-family: 'Calibri', sans-serif; /* Ensures Calibri font is used for total */
+}
+
+.checkout-button {
+    display: block;
+    width: 100%;
+    text-align: center;
+    padding: 10px;
+    background-color: #f09bc1;
+    color: white;
+    font-weight: bold;
+    border: none;
+    border-radius: 5px;
+    margin-top: 15px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    font-family: 'Calibri', sans-serif; /* Ensures Calibri font is used for checkout button */
+}
+
+.checkout-button:hover {
+    background-color: #f088b7;
+}

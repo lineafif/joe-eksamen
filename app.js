@@ -3,6 +3,10 @@ const path = require("path");
 const nodemailer = require("nodemailer");
 const app = express();
 const cloudinary = require('cloudinary').v2;
+const admin = require("firebase-admin");
+const twilio = require("twilio");
+
+
 // Middleware to parse JSON and serve static files
 app.use(express.json());
 app.use("/static", express.static(path.join(__dirname, "public")));
@@ -15,7 +19,7 @@ cloudinary.config({
  });
  
 
-// Logging middleware (optional for debugging)
+// Logging middleware 
 app.use((req, res, next) => {
   console.log(`Request: ${req.method} ${req.url}`);
   next();
@@ -55,6 +59,9 @@ app.get("/locations", (req, res) => {
 app.get("/menu", (req, res) => {
   res.sendFile(path.join(__dirname, "public", "menu.html"));
 });
+app.get("/checkout", (req, res) => {
+  res.sendFile(path.join(__dirname, "public", "checkout.html"));
+});
 
 
 
@@ -83,33 +90,39 @@ app.post("/email", async (req, res) => {
   }
 });
 
+
+//cloudinary
+
 app.get("/products", async (req, res) => {
-  try {const result = await cloudinary.api.resources({
-    type: 'upload',
-    prefix: 'JoePassport menukort', // Angiv den specifikke mappe
-    max_results: 10
-  });
- 
- 
-  const products = result.resources.map(resource => {
-    const fullName = resource.public_id; // Fuld sti (f.eks. "JoePassport menukort/orangeJuice")
-    const productName = fullName.split('/').pop(); // Tag kun sidste del efter "/"
- 
- 
-    return {
-      productName: productName,
-      imgsrc: resource.secure_url, // URL til billedet
-    };
-  });
- 
- 
-  res.json(products);
+  try {
+    const result = await cloudinary.api.resources({
+      type: 'upload',
+      prefix: 'JoePassport menukort', // Angiv den specifikke mappe
+      max_results: 10
+    });
+
+    const products = result.resources.map(resource => {
+      const fullName = resource.public_id; // Fuld sti (f.eks. "JoePassport menukort/orangeJuice")
+      const productName = fullName.split('/').pop(); // Tag kun sidste del efter "/"
+
+      
+      const price = 5.99; 
+
+      return {
+        productName: productName,
+        imgsrc: resource.secure_url, // URL til billedet
+        price: price // Legg til prisen
+      };
+    });
+
+    res.json(products); // Sender produkter med pris
   } catch (error) {
-      console.error("Fejl ved hentning af billeder:", error);
-      res.status(500).send({ message: "Fejl ved hentning af produkter fra cloudinary." });
+    console.error("Fejl ved hentning af billeder:", error);
+    res.status(500).send({ message: "Fejl ved hentning af produkter fra cloudinary." });
   }
- });
- 
+});
+
+
 // Start the server
 const PORT = 3000;
 app.listen(PORT, () => {
