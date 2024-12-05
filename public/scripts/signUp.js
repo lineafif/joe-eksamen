@@ -2,7 +2,6 @@ import { initializeApp } from "https://www.gstatic.com/firebasejs/10.5.0/firebas
 import { getAuth, createUserWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.5.0/firebase-auth.js";
 import { getDatabase, ref, set } from "https://www.gstatic.com/firebasejs/10.5.0/firebase-database.js";
 
-
 // Firebase configuration
 const firebaseConfig = {
   apiKey: "AIzaSyCFEjAZM5PTdr63DGtpscAy7QR4fLIgPcA",
@@ -18,7 +17,6 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const database = getDatabase(app);
-
 
 document.getElementById("signupForm").addEventListener("submit", async (e) => {
   e.preventDefault();
@@ -36,6 +34,7 @@ document.getElementById("signupForm").addEventListener("submit", async (e) => {
     document.getElementById("signup-msg").innerText = "Please fill out all fields.";
     return;
   }
+
   try {
     // Opprett bruker i Firebase Auth
     const userCredential = await createUserWithEmailAndPassword(auth, email, password);
@@ -49,12 +48,10 @@ document.getElementById("signupForm").addEventListener("submit", async (e) => {
       mobile: fullMobile, // Lagre mobilnummer med landkode
     });
 
-    document.getElementById("signup-msg").innerHTML = `
-      User created successfully! 
-      
-    `;
-  
+    document.getElementById("signup-msg").innerText = "User created successfully!";
   } catch (error) {
     document.getElementById("signup-msg").innerText = `Error: ${error.message}`;
   }
 });
+
+

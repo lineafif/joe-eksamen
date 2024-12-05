@@ -121,3 +121,43 @@ body {
     color: #303030;
   }
   
+  .passport-container {
+    position: relative;
+    display: inline-block;
+  }
+  
+  .passport-logo {
+    width: 450px;
+    height: auto;
+  
+
+  }
+  
+  .user-first-name {
+    position: absolute;
+    top: 64%; /* Adjust as needed to fit your design */
+    left: 35%; /* Center horizontally */
+    transform: translate(-50%, -50%);
+    font-size: 12px; /* Adjust font size for readability */
+    font-family: 'Calibri', sans-serif;
+    color: #000; /* Black text color */
+    font-weight: bold;
+    padding: 5px 10px;
+    border-radius: 5px;
+    text-align: center;
+    z-index: 1; /* Ensure it appears on top of the image */
+  }
+  .user-last-name {
+    position: absolute;
+    top: 59%; /* Adjust as needed to fit your design */
+    left: 35%; /* Center horizontally */
+    transform: translate(-50%, -50%);
+    font-size: 12px; /* Adjust font size for readability */
+    font-family: 'Calibri', sans-serif;
+    color: #000; /* Black text color */
+    font-weight: bold;
+    padding: 5px 10px;
+    border-radius: 5px;
+    text-align: center;
+    z-index: 1; /* Ensure it appears on top of the image */
+  }
