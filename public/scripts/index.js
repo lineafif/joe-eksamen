@@ -1,5 +1,5 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.5.0/firebase-app.js";
-import { getAuth, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.5.0/firebase-auth.js";
+import { getAuth, signInWithEmailAndPassword , onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.5.0/firebase-auth.js";
 
 // Firebase configuration
 const firebaseConfig = {
@@ -16,6 +16,19 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 
+// Håndterer link til pas
+onAuthStateChanged(auth, (user) => {
+  const passportLink = document.getElementById("joe-passport-link");
+  if (passportLink) {
+    if (user) {
+      // If user is logged in, show the link
+      passportLink.classList.remove("hidden");
+    } else {
+      // If no user is logged in, hide the link
+      passportLink.classList.add("hidden");
+    }
+  }
+});
 // Handle user login
 window.login = async function login() {
   const email = document.getElementById("usernameInput").value;
