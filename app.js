@@ -97,28 +97,28 @@ app.get("/products", async (req, res) => {
   try {
     const result = await cloudinary.api.resources({
       type: 'upload',
-      prefix: 'JoePassport menukort', // Angiv den specifikke mappe
+      prefix: 'JoePassport menukort', // Specific folder in Cloudinary
       max_results: 10
     });
 
-    const products = result.resources.map(resource => {
-      const fullName = resource.public_id; // Fuld sti (f.eks. "JoePassport menukort/orangeJuice")
-      const productName = fullName.split('/').pop(); // Tag kun sidste del efter "/"
+    const products = result.resources.map((resource) => {
+      const fullName = resource.public_id; // Full path (e.g., "JoePassport menukort/orangeJuice")
+      const productName = fullName.split('/').pop(); // Get the last part after "/"
 
-      
-      const price = 5.99; 
+      // Manually assign the same price for all products
+      const price = 5.99; // Fixed price for all products
 
       return {
         productName: productName,
-        imgsrc: resource.secure_url, // URL til billedet
-        price: price // Legg til prisen
+        imgsrc: resource.secure_url, // URL to the image
+        price: price // Fixed price
       };
     });
 
-    res.json(products); // Sender produkter med pris
+    res.json(products); // Send the products with image URLs and price
   } catch (error) {
-    console.error("Fejl ved hentning af billeder:", error);
-    res.status(500).send({ message: "Fejl ved hentning af produkter fra cloudinary." });
+    console.error("Error fetching products from Cloudinary:", error);
+    res.status(500).send({ message: "Error fetching products from Cloudinary." });
   }
 });
 
