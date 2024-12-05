@@ -44,6 +44,9 @@ window.login = async function login() {
     document.getElementById("login").innerText = `Welcome back, ${userCredential.user.email}`;
     console.log("User logged in:", userCredential.user);
 
+    // Set a cookie to indicate that the user is logged in
+    document.cookie = "isLoggedIn=true; path=/; max-age=3600"; // The cookie will expire in 1 hour
+
     // Redirect to Joe Passport page
     window.location.href = "/joePassport";
   } catch (error) {

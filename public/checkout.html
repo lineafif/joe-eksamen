@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="./static/styles/global.css">
+  <link rel="stylesheet" href="./static/styles/checkout.css">
+  <title>Checkout</title>
+</head>
+<body>
+  <ul>
+    <li><img src="./static/img/joeLogo.svg" alt="Logo"></li>
+    <li><a href="/">Home</a></li>
+    <li><a href="/locations">Locations</a></li>
+    <li><a href="/menu">Menu</a></li>
+  </ul>
+
+  <div class="checkout-container">
+    <h1>Checkout</h1>
+      
+    <!-- Cart Summary -->
+    <div class="cart-summary">
+      <h2>Your Cart</h2>
+      <ul id="cart-summary-items"></ul>
+      <div id="cart-summary-total"></div>
+    </div>
+  
+    <!-- Store Selection -->
+    <div class="store-selection">
+      <h2>Select a Store</h2>
+      <select id="store-dropdown">
+        <!-- Stores will be dynamically added -->
+      </select>
+    </div>
+  
+    <!-- Action Buttons -->
+    <div class="checkout-actions">
+      <button id="return-menu-button" class="action-button">Return to Menu</button>
+      <button id="confirm-order-button" class="action-button">Confirm Order</button>
+    </div>
+  </div>
+
+  <script src="./static/scripts/checkout.js"></script>
+</body>
+</html>
