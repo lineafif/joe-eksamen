@@ -6,7 +6,7 @@ const stamps = [
     { src: './static/img/Stempler/HCAHus.png', title: 'Odense' },
     { src: './static/img/Stempler/Koldinghus.png', title: 'Kolding' },
     { src: './static/img/Stempler/RoskildeVikingMuseum.png', title: 'Roskilde' },
-    // Tilføj flere stempler her
+    // Jeg tilføjer stmeplerne her
   ];
   
   function displayStamps() {
