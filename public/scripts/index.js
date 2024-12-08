@@ -41,9 +41,11 @@ window.login = async function login() {
 
   try {
     const userCredential = await signInWithEmailAndPassword(auth, email, password);
+    const user = userCredential.user;
     document.getElementById("login").innerText = `Welcome back, ${userCredential.user.email}`;
     console.log("User logged in:", userCredential.user);
-
+    document.cookie = `isLoggedIn=true; path=/; max-age=3600;`; // Available for 1 hour
+    document.cookie = `userId=${user.uid}; path=/; max-age=3600;`
     // Set a cookie to indicate that the user is logged in
     document.cookie = "isLoggedIn=true; path=/; max-age=3600"; // The cookie will expire in 1 hour
 

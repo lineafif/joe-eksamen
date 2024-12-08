@@ -6,17 +6,70 @@ const cloudinary = require('cloudinary').v2;
 const admin = require("firebase-admin");
 const twilio = require("twilio");
 
+require('dotenv').config();
+const accountSid = process.env.TWILIO_ACCOUNT_SID;
+const authToken = process.env.TWILIO_AUTH_TOKEN;
+const twilioPhoneNumber = process.env.TWILIO_PHONE_NUMBER;
+const client = twilio(accountSid, authToken);
 
 // Middleware to parse JSON and serve static files
 app.use(express.json());
 app.use("/static", express.static(path.join(__dirname, "public")));
 
+// Import the service account key (DO NOT expose this publicly)
+const serviceAccount = require('./serviceAccountKey.json');
+
+admin.initializeApp({
+  credential: admin.credential.cert(serviceAccount),
+  databaseURL: "https://diseksamen-e0f52-default-rtdb.europe-west1.firebasedatabase.app" // Replace with your Firebase database URL
+});
+
+app.post('/send-order-confirmation', async (req, res) => {
+  const { userId, storeName } = req.body;
+
+  // Check if userId and storeName are provided
+  if (!userId || !storeName) {
+    return res.status(400).json({ error: 'Missing userId or storeName' });
+  }
+
+  try {
+    // Step 1: Get phone number from Firebase Realtime Database
+    const userRef = admin.database().ref(`users/${userId}`);
+    const snapshot = await userRef.once('value');
+
+    if (!snapshot.exists()) {
+      return res.status(404).json({ error: 'User not found' });
+    }
+
+    const userData = snapshot.val();
+    const phoneNumber = userData.mobile;
+
+    if (!phoneNumber) {
+      return res.status(400).json({ error: 'Phone number not found for this user' });
+    }
+
+    // Step 2: Send SMS using Twilio
+    const message = await client.messages.create({
+      body: `Thank you for your order! You can pick it up at ${storeName}.`,
+      from: twilioPhoneNumber, // Twilio phone number
+      to: phoneNumber, // User's phone number from Firebase
+    });
+
+    console.log('Message sent successfully:', message.sid);
+    res.status(200).json({ success: true, messageSid: message.sid });
+  } catch (error) {
+    console.error('Error sending message:', error);
+    res.status(500).json({ success: false, error: error.message });
+  }
+});
+
 // konfiguration af cloudinary
 cloudinary.config({
-  cloud_name: 'dyn4wst2w',
-  api_key: '366774456327515',
-  api_secret: 'hwy0edyuyKLaZieBN1Y-W7ev39c' 
- });
+  cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+  api_key: process.env.CLOUDINARY_API_KEY,
+  api_secret: process.env.CLOUDINARY_API_SECRET
+});
+
  
 
 // Logging middleware 

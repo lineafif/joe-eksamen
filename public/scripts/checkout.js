@@ -92,28 +92,54 @@ document.addEventListener('DOMContentLoaded', () => {
         console.log(`Selected store: ${selectedStore}`);
     });
 
-    // Add Confirm Order functionality
     const confirmOrderButton = document.getElementById("confirm-order-button");
-    confirmOrderButton.addEventListener("click", () => {
-        const selectedStore = storeDropdown.value;
 
+    confirmOrderButton.addEventListener("click", async () => { // Made the function async to use await
+        const selectedStore = storeDropdown.value;
+    
         if (cart.length === 0) {
             alert("Your cart is empty. Please add items to your cart before confirming your order.");
             return;
         }
-
+    
         if (!selectedStore) {
             alert("Please select a store before confirming your order.");
             return;
         }
 
-        // Clear the cart
-        localStorage.removeItem("cart");
+    // Add Confirm Order functionality
+    const userId = getCookie("userId");
 
-        // Confirmation message
-        alert(`Your order has been confirmed! You can pick it up at ${selectedStore}.`);
-        window.location.href = "/menu"; // Redirect back to the menu
-    });
+    if (!userId) {
+        alert("You must be logged in to place an order.");
+        window.location.href = '/'; // Redirect to login page
+        return;
+    }
+
+    try {
+        const response = await fetch('/send-order-confirmation', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ userId, storeName: selectedStore })
+        });
+
+        const result = await response.json(); // Get the result from the server
+
+        if (result.success) {
+            //  Notify the user that the order was successful and messages were sent
+            alert('Order confirmed. You have received 2 SMS messages.');
+            localStorage.removeItem('cart'); // Clear the cart
+            window.location.href = '/menu'; // Redirect back to the menu
+        } else {
+            // Handle the error if the backend failed to send the message
+            alert('Failed to send SMS. Please try again later.');
+        }
+    } catch (error) {
+        // Catch any errors that occur during the fetch request
+        console.error('Error during checkout:', error);
+        alert('An error occurred.');
+    }
+});
 
     // Add Return to Menu functionality
     const returnMenuButton = document.getElementById("return-menu-button");
