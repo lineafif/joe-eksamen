@@ -22,33 +22,18 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Hardcoded list of Joe & The Juice stores in Denmark
     const stores = [
-        "Joe & The Juice - Copenhagen Airport",
-        "Joe & The Juice - Østerbro",
-        "Joe & The Juice - Frederiksberg",
-        "Joe & The Juice - Aarhus City",
-        "Joe & The Juice - Odense Central",
-        "Joe & The Juice - Aalborg",
-        "Joe & The Juice - Vesterbro",
-        "Joe & The Juice - Nyhavn",
-        "Joe & The Juice - Fields",
-        "Joe & The Juice - Fisketorvet",
-        "Joe & The Juice - Roskilde",
-        "Joe & The Juice - Lyngby",
-        "Joe & The Juice - Hellerup",
-        "Joe & The Juice - Kolding Storcenter",
-        "Joe & The Juice - Randers",
-        "Joe & The Juice - Herning",
-        "Joe & The Juice - Esbjerg",
-        "Joe & The Juice - Viborg",
-        "Joe & The Juice - Silkeborg",
-        "Joe & The Juice - Svendborg",
-        "Joe & The Juice - Nørreport",
-        "Joe & The Juice - Kongens Nytorv",
-        "Joe & The Juice - Amager Strand",
-        "Joe & The Juice - Valby",
-        "Joe & The Juice - Hørsholm",
-        "Joe & The Juice - Ballerup",
-        "Joe & The Juice - Greve"
+        "København",
+        "Frederiksberg",
+        "Charlottenlund",
+        "Farum",
+        "Gentofte",
+        "Herning",
+        "Holte",
+        "Hørsholm",
+        "Kastrup",
+        "Odense",
+        "Kolding",
+        "Roskilde",
     ];
 
     // Dynamically populate dropdown menu with a placeholder
@@ -94,7 +79,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const confirmOrderButton = document.getElementById("confirm-order-button");
 
-    confirmOrderButton.addEventListener("click", async () => { // Made the function async to use await
+    confirmOrderButton.addEventListener("click", async () => { 
         const selectedStore = storeDropdown.value;
     
         if (cart.length === 0) {
@@ -107,43 +92,71 @@ document.addEventListener('DOMContentLoaded', () => {
             return;
         }
 
-    // Add Confirm Order functionality
-    const userId = getCookie("userId");
+        // Get the user ID from the cookie
+        const userId = getCookie("userId");
 
-    if (!userId) {
-        alert("You must be logged in to place an order.");
-        window.location.href = '/'; // Redirect to login page
-        return;
-    }
-
-    try {
-        const response = await fetch('/send-order-confirmation', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ userId, storeName: selectedStore })
-        });
-
-        const result = await response.json(); // Get the result from the server
-
-        if (result.success) {
-            //  Notify the user that the order was successful and messages were sent
-            alert('Order confirmed. You have received 2 SMS messages.');
-            localStorage.removeItem('cart'); // Clear the cart
-            window.location.href = '/menu'; // Redirect back to the menu
-        } else {
-            // Handle the error if the backend failed to send the message
-            alert('Failed to send SMS. Please try again later.');
+        if (!userId) {
+            alert("You must be logged in to place an order.");
+            window.location.href = '/'; // Redirect to login page
+            return;
         }
-    } catch (error) {
-        // Catch any errors that occur during the fetch request
-        console.error('Error during checkout:', error);
-        alert('An error occurred.');
+
+        try {
+            // Send the order confirmation request to the backend
+            const response = await fetch('/send-order-confirmation', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ userId, storeName: selectedStore })
+            });
+
+            const result = await response.json();
+
+            if (result.success) {
+                //  Add stamp for the user
+                await addStampForUser(userId, selectedStore);
+                
+                //  Notify the user that the order was successful and messages were sent
+                alert('Order confirmed. You have received 2 SMS messages and a new stamp has been added.');
+                
+                // Clear the cart
+                localStorage.removeItem('cart');
+                
+                // Redirect back to the menu
+                window.location.href = '/menu'; 
+            } else {
+                alert('Failed to send SMS. Please try again later.');
+            }
+        } catch (error) {
+            console.error('Error during checkout:', error);
+            alert('An error occurred.');
+        }
+    });
+
+    //  Add a stamp for the user
+    async function addStampForUser(userId, storeName) {
+        try {
+            const response = await fetch('/add-stamp', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ userId, storeName })
+            });
+    
+            const result = await response.json();
+    
+            if (result.success) {
+                console.log(`Stamp successfully added for user: ${userId} for store: ${storeName}`);
+            } else {
+                console.warn(`Failed to add stamp for user: ${userId}`);
+            }
+        } catch (error) {
+            console.error('Error adding stamp:', error);
+        }
     }
-});
+
 
     // Add Return to Menu functionality
     const returnMenuButton = document.getElementById("return-menu-button");
     returnMenuButton.addEventListener("click", () => {
-        window.location.href = "/menu"; // Redirect back to the menu
+        window.location.href = "/menu"; 
     });
 });

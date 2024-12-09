@@ -8,9 +8,9 @@ const firebaseConfig = {
   authDomain: "diseksamen-e0f52.firebaseapp.com",
   databaseURL: "https://diseksamen-e0f52-default-rtdb.europe-west1.firebasedatabase.app",
   projectId: "diseksamen-e0f52",
-  storageBucket: "diseksamen-e0f52.appspot.com",
+  storageBucket: "diseksamen-e0f52.firebasestorage.app",
   messagingSenderId: "191371826193",
-  appId: "1:191371826193:web:a97704e1af7a77d1a14db0",
+  appId: "1:191371826193:web:a97704e1af7a77d1a14db0"
 };
 
 // Initialize Firebase
@@ -53,5 +53,3 @@ document.getElementById("signupForm").addEventListener("submit", async (e) => {
     document.getElementById("signup-msg").innerText = `Error: ${error.message}`;
   }
 });
-
-

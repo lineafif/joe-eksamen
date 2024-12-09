@@ -1,3 +1,4 @@
+
 const express = require("express");
 const path = require("path");
 const nodemailer = require("nodemailer");
@@ -175,6 +176,53 @@ app.get("/products", async (req, res) => {
   }
 });
 
+app.post('/add-stamp', async (req, res) => {
+  const { userId, storeName } = req.body;
+
+  if (!userId || !storeName) {
+      return res.status(400).json({ error: 'Missing userId or storeName' });
+  }
+
+  try {
+      const userRef = admin.database().ref(`users/${userId}/stamps`);
+      const snapshot = await userRef.once('value');
+      let currentStamps = snapshot.val() || [];
+
+      if (!Array.isArray(currentStamps)) {
+          currentStamps = Object.values(currentStamps); // 🔥 Converts Firebase object back to array
+      }
+
+      if (!currentStamps.includes(storeName)) {
+          currentStamps.push(storeName);
+      }
+
+      await userRef.set(currentStamps);
+      res.status(200).json({ success: true, stamps: currentStamps });
+  } catch (error) {
+      console.error('Error adding stamp:', error);
+      res.status(500).json({ error: 'Failed to add stamp.' });
+  }
+});
+
+app.get('/get-stamp-count', async (req, res) => {
+  const userId = req.query.userId;
+
+  if (!userId) {
+      return res.status(400).json({ error: 'Missing userId' });
+  }
+
+  try {
+      // Get the user's stamps from Firebase
+      const userRef = admin.database().ref(`users/${userId}/stamps`);
+      const snapshot = await userRef.once('value');
+      const stamps = snapshot.val() || []; // Default to an empty array if no stamps exist
+
+      res.status(200).json({ stamps });
+  } catch (error) {
+      console.error('Error getting stamp count:', error);
+      res.status(500).json({ error: 'Failed to get stamp count.' });
+  }
+});
 
 // Start the server
 const PORT = 3000;
