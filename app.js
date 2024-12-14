@@ -176,33 +176,54 @@ app.get("/products", async (req, res) => {
   }
 });
 
-app.post('/add-stamp', async (req, res) => {
-  const { userId, storeName } = req.body;
 
+
+app.use(express.json());
+
+// Middleware to verify Firebase Auth token
+async function verifyToken(req, res, next) {
+  const token = req.headers.authorization?.split("Bearer ")[1];
+  if (!token) {
+    return res.status(403).json({ error: "Unauthorized" });
+  }
+  try {
+    const decodedToken = await admin.auth().verifyIdToken(token);
+    req.user = decodedToken;
+    next();
+  } catch (error) {
+    return res.status(403).json({ error: "Invalid token" });
+  }
+}
+
+// Add stamp endpoint
+app.post("/add-stamp", verifyToken, async (req, res) => {
+  const { userId, storeName } = req.body;
   if (!userId || !storeName) {
-      return res.status(400).json({ error: 'Missing userId or storeName' });
+    return res.status(400).json({ error: "Missing userId or storeName" });
+  }
+
+  // Ensure the user is adding a stamp to their own account
+  if (req.user.uid !== userId) {
+    return res.status(403).json({ error: "Unauthorized to add stamp for this user" });
   }
 
   try {
-      const userRef = admin.database().ref(`users/${userId}/stamps`);
-      const snapshot = await userRef.once('value');
-      let currentStamps = snapshot.val() || [];
+    const userRef = admin.database().ref(`users/${userId}/stamps`);
+    const snapshot = await userRef.once("value");
+    const currentStamps = snapshot.val() || [];
 
-      if (!Array.isArray(currentStamps)) {
-          currentStamps = Object.values(currentStamps); // 🔥 Converts Firebase object back to array
-      }
-
-      if (!currentStamps.includes(storeName)) {
-          currentStamps.push(storeName);
-      }
-
+    if (!currentStamps.includes(storeName)) {
+      currentStamps.push(storeName);
       await userRef.set(currentStamps);
-      res.status(200).json({ success: true, stamps: currentStamps });
+    }
+
+    res.status(200).json({ success: true, stamps: currentStamps });
   } catch (error) {
-      console.error('Error adding stamp:', error);
-      res.status(500).json({ error: 'Failed to add stamp.' });
+    console.error("Error adding stamp:", error);
+    res.status(500).json({ error: "Failed to add stamp" });
   }
 });
+
 
 app.get('/get-stamp-count', async (req, res) => {
   const userId = req.query.userId;
