@@ -133,25 +133,25 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     //  Add a stamp for the user
-    async function addStampForUser(userId, storeName) {
-        try {
-            const response = await fetch('/add-stamp', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ userId, storeName })
-            });
-    
-            const result = await response.json();
-    
-            if (result.success) {
-                console.log(`Stamp successfully added for user: ${userId} for store: ${storeName}`);
-            } else {
-                console.warn(`Failed to add stamp for user: ${userId}`);
-            }
-        } catch (error) {
-            console.error('Error adding stamp:', error);
-        }
-    }
+
+async function addStampForUser(userId, storeName) {
+  const token = await firebase.auth().currentUser.getIdToken(); // Get Firebase Auth token
+  const response = await fetch("/add-stamp", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`, // Include token in header
+    },
+    body: JSON.stringify({ userId, storeName }),
+  });
+
+  const result = await response.json();
+  if (result.success) {
+    console.log(`Stamp successfully added for user: ${userId} for store: ${storeName}`);
+  } else {
+    console.error("Failed to add stamp:", result.error);
+  }
+}
 
 
     // Add Return to Menu functionality
@@ -160,3 +160,4 @@ document.addEventListener('DOMContentLoaded', () => {
         window.location.href = "/menu"; 
     });
 });
+
